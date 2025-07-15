@@ -51,13 +51,16 @@
 
         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.internal.NoCachingRegionFactory</property>
 
-        <mapping class="org.example.Person"/>
-        <mapping class="org.example.Customer"/>
-        <mapping class="org.example.Order"/>
-        <mapping class="org.example.OrderItem"/>
-        <mapping class="org.example.Product"/>
-        <mapping class="org.example.Medicine"/>
-        <mapping class="org.example.Cosmetic"/>
+        <mapping class="org.example.Classes.Person"/>
+        <mapping class="org.example.Classes.Customer"/>
+        <mapping class="org.example.Classes.Order"/>
+        <mapping class="org.example.Classes.OrderItem"/>
+        <mapping class="org.example.Classes.Product"/>
+        <mapping class="org.example.Classes.Medicine"/>
+        <mapping class="org.example.Classes.Cosmetic"/>
+        <mapping class="org.example.Classes.Delivary"/>
+        <mapping class="org.example.Classes.PharmacyEmployee"/>
+        <mapping class="org.example.Classes.Recipe"/>
     </session-factory>
     <!-- End of SessionFactory configuration -->
 </hibernate-configuration>

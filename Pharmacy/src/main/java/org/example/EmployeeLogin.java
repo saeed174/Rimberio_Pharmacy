@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,12 +67,29 @@ public class EmployeeLogin {
         passwordLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: black; -fx-font-weight: bold;");
         gridPane.add(passwordLabel, 0, 3);
 
-        TextField passwordField = new TextField();
+        PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter your password");
+
+        TextField visiblePasswordField = new TextField();
+        visiblePasswordField.setPromptText("Enter your password");
+        visiblePasswordField.setVisible(false);
+        visiblePasswordField.setManaged(false);
+
+        visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
+
         gridPane.add(passwordField, 1, 3);
+        gridPane.add(visiblePasswordField, 1, 3);
 
         CheckBox showPassword = new CheckBox("Show Password");
         gridPane.add(showPassword, 2, 3);
+
+        showPassword.setOnAction(event -> {
+            boolean show = showPassword.isSelected();
+            passwordField.setVisible(!show);
+            passwordField.setManaged(!show);
+            visiblePasswordField.setVisible(show);
+            visiblePasswordField.setManaged(show);
+        });
         
         Label messageLabel = new Label();
         messageLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red; -fx-font-weight: bold;");
@@ -94,7 +112,7 @@ public class EmployeeLogin {
         );
         gridPane.add(loginButton, 0, 4);
         loginButton.setOnAction(event -> {
-            signUp(emailField.getText(), passwordField.getText(), messageLabel);
+            signUp(stage,emailField.getText(), passwordField.getText(), messageLabel);
         });
 
 
@@ -138,11 +156,16 @@ public class EmployeeLogin {
         sp.getChildren().add(backButton);
 
         Scene sc = new Scene(sp);
+        sc.setOnKeyPressed(eh -> {
+            if (eh.getCode().toString().equals("ENTER")) {
+                signUp(stage,emailField.getText(), passwordField.getText(), messageLabel);
+            }
+        });
         stage.setScene(sc);
         stage.show();
     }
 
-    static void signUp(String email, String password , Label messageLabel) {
+    static void signUp(Stage stage , String email, String password , Label messageLabel) {
         // Logic for signing up the employee
         // This is a placeholder for actual sign-up logic
         if (email.isEmpty() || password.isEmpty()) {
@@ -150,6 +173,7 @@ public class EmployeeLogin {
         } else if(!email.contains("@Pharmacy.com")) {
             messageLabel.setText("Email must be a valid Pharmacy email.");
         } else {
+            messageLabel.setText("Checking employee......");
             SessionFactory sf = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(org.example.Classes.PharmacyEmployee.class)
@@ -176,7 +200,7 @@ public class EmployeeLogin {
                 }
                 else if (correctPass.equals(password)) {
                     // TODO : Handle successful login
-                    System.out.println("Login successful for employee: " + existingEmployee.getName());
+                    EmployeeDashboard.employeeDashboardScene(stage, new ImageView(new Image("File:D:\\Summer2025\\Rimberio_Pharmacy\\Pharmacy\\src\\main\\java\\org\\example\\logo.png")) , existingEmployee);
                 } else {
                     messageLabel.setText("Incorrect password. Please try again.");
                 }
